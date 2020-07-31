@@ -1,0 +1,18 @@
+{
+  "name": "iDownload",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "iDownload extension for Chromium browsers",
+  "icons":
+  {
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs", "https://www.iresearchbook.cn/*", "https://www.itextbook.cn/*",
+    "http://www.itextbook.cn/*", "http://itextbook.cn/*"
+	]
+}
