@@ -1,16 +1,32 @@
-﻿chrome.runtime.onMessage.addListener(function (request, sender) {
+﻿window.onload = onWindowLoad;
+
+function onWindowLoad() {
+  var message = document.querySelector('#message');
+  chrome.tabs.executeScript(null, {
+    file: "getPagesSource.js"
+  }, function () {
+    // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+    if (chrome.runtime.lastError) {
+      // message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+      message.innerText = 'Not available in this website!';
+    }
+  });
+}
+
+chrome.runtime.onMessage.addListener(function (request, sender) {
   if (request.action == "getSource") {
     message.innerText = '';
-    var res = request.source;
-    // console.log(request.source)
-    // console.log(res);
-    if (res == '0') {
+    var reqs = request.source;
+    // console.log(reqs);
+    if (reqs == '0') {
       message.innerText = 'No book can be downloaded!';
     } else {
-      doAll(res);
+      doAll(reqs);
 
       function getBlob(urlIn, domIn) {
         return new Promise(resolve => {
+          getInnerBlob(urlIn, domIn);
+
           function getInnerBlob(url, dom, fileType = '.pdf') {
             let that = this;
             let xhr = new XMLHttpRequest();
@@ -40,13 +56,12 @@
                 dom.removeChild(dlProgress);
                 getInnerBlob(url, dom, ".epub");
               } else if (xhr.status === 200) {
-                fileSize = (xhr.response.size / (1024 * 1024)).toFixed(2)
+                // fileSize = (xhr.response.size / (1024 * 1024)).toFixed(2)
                 // console.log(fileSize + 'M');
                 resolve([xhr.response, fileType]);
               }
             };
           };
-          getInnerBlob(urlIn, domIn);
         });
       }
 
@@ -106,19 +121,3 @@
     }
   };
 });
-
-function onWindowLoad() {
-  var message = document.querySelector('#message');
-  chrome.tabs.executeScript(null, {
-    file: "getPagesSource.js"
-  }, function () {
-    // If you try and inject into an extensions page or the webstore/NTP you'll get an error
-    if (chrome.runtime.lastError) {
-      // message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
-      message.innerText = 'Not available in this website!';
-    }
-  });
-}
-
-
-window.onload = onWindowLoad;
