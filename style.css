@@ -53,7 +53,7 @@ body {
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 0 5px 0 #ddd inset;
-  text-align: center;
+  text-align: left;
 }
 
 .dl-progress span {
