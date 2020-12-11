@@ -21,7 +21,8 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
   if (request.action == "getSource") {
     message.innerText = "";
     var reqs = request.source;
-    if (reqs == "0") {
+    // if (reqs == "0") {
+    if (reqs == null) {
       message.innerText = "No book can be downloaded!";
     } else {
       doAll(reqs);
@@ -57,8 +58,8 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
                 //   spanDiv.style.width = that.percentage + "%";
                 // }
                 var eTotal;
-                if (e.loaded){
-                  if (e.currentTarget.response){
+                if (e.loaded) {
+                  if (e.currentTarget.response) {
                     eTotal = e.total;
                   } else {
                     eTotal = e.loaded + 10e5;
@@ -67,7 +68,9 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
                   that.percentage = percentComplete * 100;
                   spanDiv.style.width = that.percentage + "%";
                 }
-              }, false);
+              },
+              false
+            );
 
             xhr.onload = () => {
               if (xhr.response.size === 0) {
@@ -107,10 +110,12 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
       }
 
       function doAll(res) {
+        var resReg = /(\/batch|\/img)\/[\/]?.*?(?=.jpg|.png)/i;
         for (let i = 0; i < res.length; i++) {
-          let resI = res[i].replace("//", "/"); // replace '//' to '/' in some case
+          let resI = res[i].match(resReg)[0].replace("//", "/"); // replace '//' to '/' in some case
+          let imgType = res[i].slice(res[i].length - 4, res[i].length);
+
           let resSplit = resI.split("/");
-          // console.log(resSplit);
           let webSite = resSplit[1] == "batch" ? "itextbook" : "iresearchbook";
           let storePath = "/" + resSplit[2] + "/" + resSplit[3] + ".cdf";
 
@@ -119,7 +124,7 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
 
           let bookCover = document.createElement("img");
           bookCover.setAttribute("class", "dl-image");
-          bookCover.src = "https://www." + webSite + ".cn" + resI + ".jpg";
+          bookCover.src = "https://www." + webSite + ".cn" + resI + imgType;
           listDiv.appendChild(bookCover);
 
           let dlBtn = document.createElement("a");
@@ -127,8 +132,7 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
           dlBtn.className = "dl-link";
           // dlBtn.download = saveName;
           // dlBtn.href = 'https://www.' + webSite + '.cn/f/cdf/file?file=' + storePath
-          let downloadUrl =
-            "https://www." + webSite + ".cn/f/cdf/file?file=" + storePath;
+          let downloadUrl = "https://www." + webSite + ".cn/f/cdf/file?file=" + storePath;
           dlBtn.href = "javascript:void(0);";
           dlBtn.innerText = "Download Book";
           listDiv.appendChild(dlBtn);
