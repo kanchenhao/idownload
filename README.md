@@ -22,6 +22,7 @@
 * [Roadmap](#roadmap)
 * [Contributing](#contributing)
 * [License](#license)
+* [Statement](#statement)
 * [Contact](#contact)
 * [Acknowledgements](#acknowledgements)
 
@@ -63,6 +64,10 @@ Contributions are what make the open source community such an amazing place to b
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
+## Statement
+
+**iDownload** is for personal use only, please do not use it for any commercial purposes. If the software is used for commercial purposes, the creator is not responsible for it!
 
 <!-- CONTACT -->
 ## Contact
